@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Quickview
+Comment=A libcosmic frontend for quickemu
+Type=Application
+Icon=dev.debarchito.quickview
+Exec=quickview %F
+Terminal=false
+StartupNotify=true
+Categories=COSMIC
+Keywords=COSMIC
+MimeType=
