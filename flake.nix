@@ -25,6 +25,7 @@
               just
               libxkbcommon
             ];
+            env.LD_LIBRARY_PATH = "${pkgs.wayland}/lib";
             languages.rust.enable = true;
           };
         };
