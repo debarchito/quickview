@@ -12,6 +12,7 @@ debian/*
 !debian/install
 !debian/rules
 !debian/source# Devenv
+.vscode
 .direnv
 .devenv*
 .pre-commit-config.yaml

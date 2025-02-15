@@ -1,4 +1,5 @@
 {
+  description = "Development shell for quickview";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-parts = {
@@ -24,9 +25,13 @@
             packages = with pkgs; [
               just
               libxkbcommon
+              wayland
             ];
-            env.LD_LIBRARY_PATH = "${pkgs.wayland}/lib";
-            languages.rust.enable = true;
+            env.LD_LIBRARY_PATH = "${pkgs.libxkbcommon}/lib:${pkgs.wayland}/lib";
+            languages.rust = {
+              enable = true;
+              mold.enable = true;
+            };
           };
         };
     };

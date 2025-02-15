@@ -1,8 +1,5 @@
-// SPDX-License-Identifier: {{ license }}
-
-//! Provides localization support for this crate.
-
-use std::sync::LazyLock;
+// SPDX-License-Identifier: MIT
+//! Provides localization support.
 
 use i18n_embed::{
     fluent::{fluent_language_loader, FluentLanguageLoader},
@@ -10,6 +7,7 @@ use i18n_embed::{
     DefaultLocalizer, LanguageLoader, Localizer,
 };
 use rust_embed::RustEmbed;
+use std::sync::LazyLock;
 
 /// Applies the requested language(s) to requested translations from the `fl!()` macro.
 pub fn init(requested_languages: &[LanguageIdentifier]) {
@@ -18,7 +16,7 @@ pub fn init(requested_languages: &[LanguageIdentifier]) {
     }
 }
 
-// Get the `Localizer` to be used for localizing this library.
+/// Get the `Localizer` to be used for localizing this library.
 #[must_use]
 pub fn localizer() -> Box<dyn Localizer> {
     Box::from(DefaultLocalizer::new(&*LANGUAGE_LOADER, &Localizations))
