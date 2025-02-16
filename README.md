@@ -1,4 +1,4 @@
-# Quickview
+# quickview
 
 A [libcosmic](https://github.com/pop-os/libcosmic) frontend for [quickemu](https://github.com/quickemu-project/quickemu) ('cause
 [quickgui](https://github.com/quickemu-project/quickgui) is not pretty enough).

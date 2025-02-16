@@ -3,7 +3,7 @@
   <id>dev.debarchito.quickview</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
-  <name>Quickview</name>
+  <name>quickview</name>
   <summary>A libcosmic frontend for quickemu</summary>
   <icon type="remote" width="64" height="64" scale="1">
     https://github.com/debarchito/quickview/raw/main/resources/icons/hicolor/scalable/apps/icon.svg

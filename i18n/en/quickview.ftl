@@ -1,7 +1,11 @@
-app-title = Quickview
-about = About
+app-title = quickview
+
+# Views
 view = View
-welcome = Welcome to COSMIC ✨
+view-about = About
+
+# Pages
 page-home = Home
-page-settings = Settings
-git-description = Git commit {$hash} on {$date}
+page-config = Config
+
+git-description = Commit {$hash}
