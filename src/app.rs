@@ -7,9 +7,8 @@ use cosmic::app::{context_drawer, Core, Task};
 use cosmic::cosmic_config::{self, CosmicConfigEntry};
 use cosmic::iced::Subscription;
 use cosmic::widget::menu::action::MenuAction;
-use cosmic::widget::{self, menu, nav_bar};
+use cosmic::widget::{menu, nav_bar};
 use cosmic::{Application, ApplicationExt, Element};
-use futures_util::SinkExt;
 use std::collections::HashMap;
 mod context_page;
 mod header;
@@ -46,7 +45,6 @@ pub enum ContextPage {
 #[derive(Debug, Clone)]
 pub enum Message {
   ToggleContextPage(ContextPage),
-  SubscriptionChannel,
   UpdateConfig(Config),
   OpenUrl(String),
 }
@@ -136,39 +134,28 @@ impl Application for AppModel {
   /// @required_by_trait
   fn view(&self) -> Element<Self::Message> {
     let id = self.nav_model.active();
-    let page = self.nav_model.data::<Page>(id);
+    let page = self.nav_model.data::<Page>(id).unwrap_or_else(|| {
+      tracing::error!("invalid nav entity => defaulting to home");
+      &Page::Home
+    });
 
     match page {
-      Some(Page::Home) => view_page::home::init(),
-      Some(Page::Config) => view_page::config::init(),
-      // TODO: Something went wrong, show an error page.
-      None => widget::container("No page found").into(),
+      Page::Home => view_page::home::init(),
+      Page::Config => view_page::config::init(),
     }
   }
 
   /// Event sources that are to be listened to.
   /// @overridden
   fn subscription(&self) -> Subscription<Self::Message> {
-    struct Subscriptions;
-
-    Subscription::batch(vec![
-      Subscription::run_with_id(
-        std::any::TypeId::of::<Subscriptions>(),
-        cosmic::iced::stream::channel(4, move |mut channel| async move {
-          _ = channel.send(Message::SubscriptionChannel).await;
-          futures_util::future::pending().await
-        }),
-      ),
-      self
-        .core()
-        .watch_config::<Config>(Self::APP_ID)
-        .map(|update| {
-          for why in update.errors {
-            tracing::error!(?why, "app config error");
-          }
-          Message::UpdateConfig(update.config)
-        }),
-    ])
+    Subscription::batch(vec![self.core().watch_config::<Config>(Self::APP_ID).map(
+      |update| {
+        for why in update.errors {
+          tracing::error!(?why, "app config error");
+        }
+        Message::UpdateConfig(update.config)
+      },
+    )])
   }
 
   /// Respond to an application-specific message.
@@ -183,18 +170,14 @@ impl Application for AppModel {
           self.core.window.show_context = true;
         }
       }
-      Message::SubscriptionChannel => {
-        tracing::info!("subscription channel message");
-      }
       Message::UpdateConfig(config) => {
         self.config = config;
       }
-      Message::OpenUrl(url) => match open::that_detached(&url) {
-        Ok(()) => {}
-        Err(err) => {
-          eprintln!("failed to open {url:?}: {err}");
+      Message::OpenUrl(url) => {
+        if let Err(why) = open::that_detached(&url) {
+          tracing::error!(%why, "error opening URL");
         }
-      },
+      }
     }
     Task::none()
   }

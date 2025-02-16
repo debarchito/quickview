@@ -3913,7 +3913,6 @@ dependencies = [
 name = "quickview"
 version = "0.1.0"
 dependencies = [
- "futures-util",
  "i18n-embed",
  "i18n-embed-fl",
  "libcosmic",
