@@ -3918,6 +3918,7 @@ dependencies = [
  "libcosmic",
  "open",
  "rust-embed",
+ "serde",
  "tokio",
  "tracing",
  "tracing-subscriber",

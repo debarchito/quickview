@@ -6,6 +6,10 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     devenv = {
       url = "github:cachix/devenv";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,7 +34,20 @@
             env.LD_LIBRARY_PATH = "${pkgs.libxkbcommon}/lib:${pkgs.wayland}/lib";
             languages.rust = {
               enable = true;
+              channel = "nightly";
+              components = [
+                "rustc"
+                "cargo"
+                "clippy"
+                "rustfmt"
+                "rust-src"
+                "rust-analyzer"
+              ];
               mold.enable = true;
+            };
+            git-hooks.hooks = {
+              rustfmt.enable = true;
+              clippy.enable = true;
             };
           };
         };
